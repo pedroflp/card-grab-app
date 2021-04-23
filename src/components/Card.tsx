@@ -1,34 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
 
+import { useAppContext } from '../contexts/Context';
+import { RootStateOrAny, useSelector } from 'react-redux';
+
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { useAppContext } from '../contexts/Context';
 
-const Card: React.FC = () => { 
-  const { toggleHide } = useAppContext()
+
+type CardProps = {
+  cardName: string,
+  cardUsername: string,
+  cardNumber: string,
+}
+
+
+
+const Card: React.FC<CardProps> = (props) => {
 
   return (
-    <LinearGradient 
+      <LinearGradient 
       colors={['#FC6767b3', '#EC008Cb5']} 
       start={[0,1]}
       end={[1,0]}
       style={styles.card}
+      key={props.cardNumber}
     >
       <View style={styles.cardHeader}>
-        <Text style={styles.cardName}>Nome do Cartão</Text>
+        <Text style={styles.cardName}>{props.cardName}</Text>
         <Text style={styles.cardFlag}>Bandeira</Text>
       </View>
       <View style={styles.cardFooter}>
-        <Text style={styles.cardUsername}>Nome Completo</Text>
-        <Text style={styles.cardNumber}>{ toggleHide ? '**** **** **** ****' : '1234 1234 1234 1234' }</Text>
+        <Text style={styles.cardUsername}>{props.cardUsername}</Text>
+        <Text style={styles.cardNumber}>{props.cardNumber}</Text>
+        {/* <Text style={styles.cardNumber}>{ toggleHide ? '**** **** **** ****' : card.cardNuber }</Text> */}
       </View>
     </LinearGradient>
-  );
+  )
 }
 
-export { Card };
+export default Card;
 
 const styles = StyleSheet.create({
   card: {
@@ -47,6 +59,9 @@ const styles = StyleSheet.create({
   cardName: {
     fontFamily: fonts.heading,
     fontSize: 20,
+    maxWidth: 200,
+    maxHeight: 50,
+    overflow: 'hidden',
     color: colors.white
   },
   cardFlag: {
@@ -61,7 +76,7 @@ const styles = StyleSheet.create({
   cardUsername: {
     fontFamily: fonts.subtitle,
     color: colors.white,
-    fontSize: 16
+    fontSize: 16,
   },
   cardNumber: {
     fontFamily: fonts.cardNumber,

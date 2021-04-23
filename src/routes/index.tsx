@@ -1,15 +1,16 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
 
+import store from '../store';
 import AppRoutes from './stack.routes';
-import AppContext from '../contexts/Context';
 
 const Routes = () => (
-  <AppContext>
+  <Provider store={store}>
       <NavigationContainer>
       <AppRoutes />
     </NavigationContainer>
-  </AppContext>
+  </Provider>
 )
 
 export default Routes;

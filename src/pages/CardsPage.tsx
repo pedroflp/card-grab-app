@@ -1,46 +1,68 @@
 import React from 'react';
-import { Text, SafeAreaView, View, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { Text, SafeAreaView, View, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import { RootStateOrAny, useSelector } from 'react-redux'
 
 import { Entypo } from '@expo/vector-icons';
 
-import { Card } from '../components/Card';
+import Card from '../components/Card';
 import { ActionButtons } from '../components/ActionButtons';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { RectButton } from 'react-native-gesture-handler';
+
+
+type CardProps = {
+  cardId: number,
+  cardName: string,
+  cardUsername: string,
+  cardNumber: string,
+}
+
 
 const CardsPage: React.FC = () => {
   const navigation = useNavigation();
+
+  const cards = useSelector((state: RootStateOrAny) => state.cards)
  
-  const createNewCard = () => {
+  function createNewCard() {
     navigation.navigate('CreateCardPage')
   }
 
   return (
-    <SafeAreaView>
+
+      <SafeAreaView>
       <View style={styles.pageContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Cartões</Text>
-          <TouchableOpacity onPress={createNewCard} activeOpacity={0.8} style={styles.createCardButton}>
+          <RectButton onPress={createNewCard} activeOpacity={0.8} style={styles.createCardButton}>
             <Entypo  name='plus' size={25} />
-            </TouchableOpacity>
+          </RectButton>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.cardContainer}>
-            <Card />
-            <Card />
+          { cards.map((card: CardProps) => {
+            return (
+              <Card 
+                cardName={card.cardName}
+                cardUsername={card.cardUsername}
+                cardNumber={card.cardNumber}
+              />
+            )
+          })}
           </View>
         </ScrollView>
 
+        { cards.length > 0 &&
         <View style={styles.actionContainer}>
           <Text style={styles.actionTitle}>Ações</Text>
-
           <View style={styles.actionButtonList}>
             <ActionButtons />
           </View>
         </View>
+        }
 
       </View>
     </SafeAreaView>  

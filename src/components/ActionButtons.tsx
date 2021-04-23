@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Dimensions, View } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, Dimensions, View } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { Octicons } from '@expo/vector-icons';
@@ -14,25 +15,25 @@ const ActionButtons: React.FC = () => {
 
   return (
    <>
-      <TouchableOpacity onPress={toggleView} activeOpacity={0.7} style={styles.button}>
-      <Ionicons 
-        name="eye-outline" 
-        size={25} 
-        style={{ width: 25 }}
-        color="#2D2940" 
-      />
+      <RectButton onPress={toggleView} activeOpacity={0.7} style={styles.button}>
+        <Ionicons 
+          name="eye-outline" 
+          size={25} 
+          style={{ width: 25 }}
+          color="#2D2940" 
+        />
       <Text style={styles.title}>Esconder número</Text>
-    </TouchableOpacity>
+    </RectButton>
 
-    <TouchableOpacity onPress={deleteCard} activeOpacity={0.7} style={styles.button}>
+    <RectButton onPress={deleteCard} activeOpacity={0.7} style={styles.button}>
       <Octicons 
         name="trashcan" 
         size={25} 
         style={{ width: 25 }}
         color="red" 
       />
-      <Text style={styles.titleRed}>Esconder número</Text>
-    </TouchableOpacity>
+      <Text style={styles.titleRed}>Apagar cartão</Text>
+    </RectButton>
    </>
   );
 }

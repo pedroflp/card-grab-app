@@ -2,6 +2,7 @@ export default {
   textHeading: '#000000',
   textSubTitle: '#525252',
   textComplement: '#2D2940',
+  inputBorder: '#E3E1E1',
 
   background: '#eeeeee',
   white: '#FFFFFF',

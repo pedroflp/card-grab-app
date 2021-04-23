@@ -15,7 +15,7 @@ export default function AppContext({ children }: any) {
   }
 
   function deleteCard() {
-    setToggleHide(!toggleHide);
+    ''
   }
 
   return (
