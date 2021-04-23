@@ -4,8 +4,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { useAppContext } from '../contexts/Context';
 
 const Card: React.FC = () => { 
+  const { toggleHide } = useAppContext()
+
   return (
     <LinearGradient 
       colors={['#FC6767b3', '#EC008Cb5']} 
@@ -19,7 +22,7 @@ const Card: React.FC = () => {
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.cardUsername}>Nome Completo</Text>
-        <Text style={styles.cardNumber}>1234 1234 1234 1234</Text>
+        <Text style={styles.cardNumber}>{ toggleHide ? '**** **** **** ****' : '1234 1234 1234 1234' }</Text>
       </View>
     </LinearGradient>
   );

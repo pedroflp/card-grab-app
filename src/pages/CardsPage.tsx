@@ -3,11 +3,9 @@ import { Text, SafeAreaView, View, TouchableOpacity, StyleSheet, ScrollView, Dim
 import { useNavigation } from '@react-navigation/core';
 
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons'; 
-import { Octicons } from '@expo/vector-icons';
 
 import { Card } from '../components/Card';
-import { ActionButton } from '../components/ActionButton';
+import { ActionButtons } from '../components/ActionButtons';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
@@ -21,42 +19,29 @@ const CardsPage: React.FC = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Cartões</Text>
-        <TouchableOpacity onPress={createNewCard} activeOpacity={0.8} style={styles.createCardButton}>
-          <Entypo  name='plus' size={25} />
-          </TouchableOpacity>
-      </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.cardContainer}>
-          <Card />
-          <Card />
+      <View style={styles.pageContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>Cartões</Text>
+          <TouchableOpacity onPress={createNewCard} activeOpacity={0.8} style={styles.createCardButton}>
+            <Entypo  name='plus' size={25} />
+            </TouchableOpacity>
         </View>
-      </ScrollView>
 
-      <View style={styles.actionContainer}>
-        <Text style={styles.actionTitle}>Ações</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.cardContainer}>
+            <Card />
+            <Card />
+          </View>
+        </ScrollView>
 
-        <View style={styles.actionButtonList}>
-          <ActionButton title='Esconder número' type="toggleHide">
-            <Ionicons 
-              name="eye-outline" 
-              size={25} 
-              style={{ width: 25 }}
-              color="#2D2940" 
-            />
-          </ActionButton>
+        <View style={styles.actionContainer}>
+          <Text style={styles.actionTitle}>Ações</Text>
 
-          <ActionButton title='Apagar cartão' type="delete">
-            <Octicons 
-              name="trashcan" 
-              size={25} 
-              style={{ width: 25 }}
-              color="red" 
-            />
-          </ActionButton>
+          <View style={styles.actionButtonList}>
+            <ActionButtons />
+          </View>
         </View>
+
       </View>
     </SafeAreaView>  
   );
@@ -65,6 +50,10 @@ const CardsPage: React.FC = () => {
 export { CardsPage };
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    paddingVertical: 50,
+  }, 
+
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
