@@ -34,11 +34,11 @@ const SliderCard = () => {
     <View>
       <Carousel
         layout="default"
-        layoutCardOffset={9}
+        layoutCardOffset={0}
         data={cards}
         renderItem={SliderCardItem}
         sliderWidth={Dimensions.get('window').width}
-        itemWidth={Dimensions.get('window').width*0.9}
+        itemWidth={Dimensions.get('window').width*0.85}
         onSnapToItem={(index) => setIndex(index)}
         useScrollView={false}
       />
