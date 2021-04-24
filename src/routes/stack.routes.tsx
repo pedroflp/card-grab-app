@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { CardsPage } from '../pages/CardsPage';
+import CardsPage from '../pages/CardsPage';
 import { CreateCardPage } from '../pages/CreateCardPage';
 
 import colors from '../styles/colors';

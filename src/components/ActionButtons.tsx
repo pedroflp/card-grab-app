@@ -1,31 +1,48 @@
-import React from 'react';
-import { Text, StyleSheet, Dimensions, View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, StyleSheet, Dimensions } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { Octicons } from '@expo/vector-icons';
 
+import { setActiveCard} from '../store/actions/setActiveCard'
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { useAppContext } from '../contexts/Context';
 
+type Props = {
+  activeCard: number,
+}
 
-const ActionButtons: React.FC = () => {
-  const { toggleView, deleteCard } = useAppContext();
+const ActionButtons: React.FC<Props> = (props) => {
+  const dispatch = useDispatch();
+
+  const [hideCardNumber, setHideCardNumber] = useState(Boolean)
+
+  if (hideCardNumber == true) {
+    setHideCardNumber(false)
+  }
+
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
+
+  // function handleHideCardNumber() {
+  //   dispatch(toggleHideCardNumber(props.activeCard))
+  // }
+
 
   return (
    <>
-      <RectButton onPress={toggleView} activeOpacity={0.7} style={styles.button}>
-        <Ionicons 
-          name="eye-outline" 
-          size={25} 
-          style={{ width: 25 }}
-          color="#2D2940" 
-        />
+    <RectButton activeOpacity={0.7} style={styles.button}>
+      <Ionicons 
+        name="eye-outline" 
+        size={25} 
+        style={{ width: 25 }}
+        color="#2D2940" 
+      />
       <Text style={styles.title}>Esconder número</Text>
     </RectButton>
 
-    <RectButton onPress={deleteCard} activeOpacity={0.7} style={styles.button}>
+    <RectButton activeOpacity={0.7} style={styles.button}>
       <Octicons 
         name="trashcan" 
         size={25} 

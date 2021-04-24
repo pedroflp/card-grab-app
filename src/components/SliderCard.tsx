@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react'
-import { Dimensions, View } from "react-native"
-import Carousel, { Pagination } from 'react-native-snap-carousel'
-import { RootStateOrAny, useSelector } from 'react-redux'
+import React, { useState } from 'react';
+import { Dimensions, View } from "react-native";
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+
 import Card from './Card'
 
 type CardProps = {
@@ -17,12 +18,16 @@ type SliderCard = {
 }
 
 const SliderCard = () => {
+  const dispatch = useDispatch();
+
   const [index, setIndex] = useState(0)
 
-  const cards = useSelector((state: RootStateOrAny) => state.cards)
-
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data)
+  
+  
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
+      cardId={index}
       cardName={item.cardName}
       cardUsername={item.cardUsername}
       cardNumber={item.cardNumber} 
@@ -60,6 +65,8 @@ const SliderCard = () => {
 
   )
 }
+
+
 
 
 

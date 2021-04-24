@@ -6,9 +6,12 @@ import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
 type CardProps = {
+  cardId: number,
   cardName: string,
   cardUsername: string,
   cardNumber: string,
+  hideCardNumber?: boolean,
+  canShow?: number,
 }
 
 const Card: React.FC<CardProps> = (props) => {
@@ -27,8 +30,7 @@ const Card: React.FC<CardProps> = (props) => {
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.cardUsername}>{props.cardUsername}</Text>
-        <Text style={styles.cardNumber}>{props.cardNumber}</Text>
-        {/* <Text style={styles.cardNumber}>{ toggleHide ? '**** **** **** ****' : card.cardNuber }</Text> */}
+        <Text style={styles.cardNumber}>{ props.hideCardNumber ? '**** **** **** ****' : props.cardNumber }</Text>
       </View>
     </LinearGradient>
   )
@@ -55,7 +57,8 @@ const styles = StyleSheet.create({
     maxWidth: 200,
     maxHeight: 50,
     overflow: 'hidden',
-    color: colors.white
+    color: colors.white,
+    textTransform: 'capitalize'
   },
   cardFlag: {
     fontFamily: fonts.heading,
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.subtitle,
     color: colors.white,
     fontSize: 16,
+    textTransform: 'capitalize'
   },
   cardNumber: {
     fontFamily: fonts.cardNumber,

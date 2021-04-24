@@ -1,38 +1,13 @@
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux'
 
-const INITIAL_STATE = {
-  activeCard: 0,
-  cards: [
-    {
-      cardId: 1,
-      cardName: 'Cartao de credito',
-      cardUsername: 'Pedro felipe',
-      cardNumber: '1234 1234 1234 1234'
-    },
-    {
-      cardId: 2,
-      cardName: 'Cartao de debito',
-      cardUsername: 'Pedro felipe',
-      cardNumber: '4321 4321 4321 4321'
-    },
-  ]
-}
+import createCard from './reducers/createCard'
+import getActiveCard from './reducers/getActiveCard'
 
-function createCards(state = INITIAL_STATE, action: any) {
-  switch(action.type) {
-    case 'ADD_NEWCARD': 
-      return { ...state, card: [...state.cards, action]};
-    default:
-      return state
-  }
-}
+const rootReducer = combineReducers({
+  createCard,
+  getActiveCard
+})
 
-export const addCard = (card: any) => {
-  return {
-    type: 'ADD_NEWCARD'
-  }
-}
-
-const store = createStore(createCards);
+const store = createStore(rootReducer);
 
 export default store;

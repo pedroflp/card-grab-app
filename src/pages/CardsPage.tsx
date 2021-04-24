@@ -1,42 +1,59 @@
-import React from 'react';
-import { Text, SafeAreaView, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { Text, SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { connect, RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+
+import { RectButton } from 'react-native-gesture-handler';
 
 import { Entypo } from '@expo/vector-icons';
 
-import Card from '../components/Card';
 import { ActionButtons } from '../components/ActionButtons';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { RectButton } from 'react-native-gesture-handler';
-import { SliderCard } from '../components/SliderCard';
-
+import Card from '../components/Card';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { setActiveCard } from '../store/actions/setActiveCard';
 
 type CardProps = {
   cardId: number,
   cardName: string,
   cardUsername: string,
   cardNumber: string,
+  hideCardNumber?: boolean,
 }
 
-
+type SliderCard = {
+  item: CardProps,
+  index: number,
+}
 
 const CardsPage: React.FC = () => {
   const navigation = useNavigation();
+
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
   const dispatch = useDispatch();
 
-  const cards = useSelector((state: RootStateOrAny) => state.cards)
+  const [index, setIndex] = useState(0);
  
   function createNewCard() {
     navigation.navigate('CreateCardPage')
   }
 
-  return (
+    
+  const SliderCardItem = ({ item, index }: SliderCard) => (
+    <Card
+      cardId={index}
+      cardName={item.cardName}
+      cardUsername={item.cardUsername}
+      cardNumber={item.cardNumber} 
+      hideCardNumber={item.hideCardNumber}
+      key={index}
+    />
+  ) 
 
-      <SafeAreaView>
+  return (
+    <SafeAreaView>
       <View style={styles.pageContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Cartões</Text>
@@ -46,14 +63,40 @@ const CardsPage: React.FC = () => {
         </View>
 
        <View style={styles.cardContainer}>
-        <SliderCard />
+          <Carousel
+            layout="default"
+            layoutCardOffset={0}
+            data={cards}
+            renderItem={SliderCardItem}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width*0.85}
+            onSnapToItem={(index) => {
+              setIndex(index);
+              dispatch(setActiveCard(index))
+            }}
+            useScrollView={false}
+          />
+          <Pagination
+            dotsLength={cards.length}
+            activeDotIndex={index}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.6)'
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={1}
+            tappableDots={false}
+          />
        </View>
 
         { cards.length > 0 &&
         <View style={styles.actionContainer}>
           <Text style={styles.actionTitle}>Ações</Text>
           <View style={styles.actionButtonList}>
-            <ActionButtons />
+            <ActionButtons activeCard={index} />
           </View>
         </View>
         }
@@ -63,7 +106,11 @@ const CardsPage: React.FC = () => {
   );
 }
 
-export { CardsPage }
+const mapStateToProps = (state: any) => ({
+  cards: state.cards,
+})
+
+export default connect(mapStateToProps, null)(CardsPage)
 
 
 const styles = StyleSheet.create({
@@ -96,7 +143,6 @@ const styles = StyleSheet.create({
 
   cardContainer: {
     marginVertical: 33,
-    flexDirection: 'row'
   },
 
   actionContainer: {
