@@ -1,6 +1,7 @@
 import { createStore } from 'redux';
 
 const INITIAL_STATE = {
+  activeCard: 0,
   cards: [
     {
       cardId: 1,

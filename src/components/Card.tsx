@@ -1,21 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'
-
-import { useAppContext } from '../contexts/Context';
-import { RootStateOrAny, useSelector } from 'react-redux';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-
 
 type CardProps = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
 }
-
-
 
 const Card: React.FC<CardProps> = (props) => {
 
@@ -44,7 +38,7 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
-    width: 330,
+    width: Dimensions.get('window').width*0.85,
     height: 200,
     backgroundColor: colors.white,
     marginHorizontal: 10,

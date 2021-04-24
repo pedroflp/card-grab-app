@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, SafeAreaView, View, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { RootStateOrAny, useSelector } from 'react-redux'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import { Entypo } from '@expo/vector-icons';
 
@@ -11,6 +12,7 @@ import { ActionButtons } from '../components/ActionButtons';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { RectButton } from 'react-native-gesture-handler';
+import { SliderCard } from '../components/SliderCard';
 
 
 type CardProps = {
@@ -21,8 +23,10 @@ type CardProps = {
 }
 
 
+
 const CardsPage: React.FC = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const cards = useSelector((state: RootStateOrAny) => state.cards)
  
@@ -41,19 +45,9 @@ const CardsPage: React.FC = () => {
           </RectButton>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.cardContainer}>
-          { cards.map((card: CardProps) => {
-            return (
-              <Card 
-                cardName={card.cardName}
-                cardUsername={card.cardUsername}
-                cardNumber={card.cardNumber}
-              />
-            )
-          })}
-          </View>
-        </ScrollView>
+       <View style={styles.cardContainer}>
+        <SliderCard />
+       </View>
 
         { cards.length > 0 &&
         <View style={styles.actionContainer}>
@@ -69,7 +63,8 @@ const CardsPage: React.FC = () => {
   );
 }
 
-export { CardsPage };
+export { CardsPage }
+
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -98,14 +93,14 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOffset: { height: 20, width: 20 },
   },
+
   cardContainer: {
     marginVertical: 33,
-    marginHorizontal: 20,
     flexDirection: 'row'
   },
 
   actionContainer: {
-    marginTop: 44,
+    marginTop: 10,
     paddingHorizontal: 30,
     justifyContent: 'center',
     alignItems: 'flex-start'
