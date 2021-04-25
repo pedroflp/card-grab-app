@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { RootStateOrAny, useSelector } from 'react-redux';
 
 type CardProps = {
   cardId: number,
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
 const Card: React.FC<CardProps> = (props) => {
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
+
+  console.log(`cards: ${cards}`);
+  
 
   return (
       <LinearGradient 
@@ -29,7 +34,7 @@ const Card: React.FC<CardProps> = (props) => {
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.cardUsername}>{props.cardUsername}</Text>
-        <Text style={styles.cardNumber}>{ props.hideNumber ? '**** **** **** ****' : props.cardNumber }</Text>
+        <Text style={styles.cardNumber}>{ props.hideCardNumber ? '**** **** **** ****' : props.cardNumber }</Text>
       </View>
     </LinearGradient>
   )

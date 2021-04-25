@@ -3,7 +3,7 @@ type Card = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
 export const deleteCardAction = (id: number) => {

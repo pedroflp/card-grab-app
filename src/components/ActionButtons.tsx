@@ -18,29 +18,38 @@ type Props = {
 
 type Card = {
   cardId: number,
+  cardName: string, 
+  cardUsername: string, 
+  cardNumber: string,
   hideCardNumber: boolean,
 }
 
 const ActionButtons: React.FC<Props> = (props) => {
   const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
   const dispatch = useDispatch();
-
+  
   function handleDeleteCard() {
-    cards.map(({ cardId }: Card) => {     
-      if (cardId === props.activeCard ) {
-        dispatch(deleteCardAction(cardId))
+    cards.map((card: Card) => {     
+      if (card.cardId === props.activeCard ) {
+        dispatch(deleteCardAction(card.cardId))
       }
     })
   }
 
-  function handleToggleViewCardNumber() {
-    cards.map(({ cardId, hideCardNumber }: Card) => {
-      console.log(`ID do cartao: ${cardId} = Cartao ativo: ${props.activeCard}`);
+  function showcards() {
+    cards.map((card: Card) => {
+      console.log(card);
       
-      if (cardId === props.activeCard ) {
-        dispatch(toggleViewNumberCard(cardId, !hideCardNumber))
-      } else {
-        console.log(`Id do cartao: ${cardId} != do cartao ativo: ${props.activeCard}`);     
+    })
+  }
+
+  function handleToggleViewCardNumber() {
+    cards.map((card: Card) => {    
+      if (card.cardId === props.activeCard ) {
+        dispatch(toggleViewNumberCard(
+          card.cardId,
+          !card.hideCardNumber,
+        ))
       }
     })
   }
@@ -65,6 +74,9 @@ const ActionButtons: React.FC<Props> = (props) => {
         color="red" 
       />
       <Text style={styles.titleRed}>Apagar cartão</Text>
+    </RectButton>
+    <RectButton onPress={showcards} activeOpacity={0.7} style={styles.button}>
+      <Text style={styles.titleRed}>show</Text>
     </RectButton>
    </>
   );

@@ -3,7 +3,7 @@ type Card = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
 export const createNewCard = (card: Card) => {
@@ -13,6 +13,6 @@ export const createNewCard = (card: Card) => {
     cardName: card.cardName, 
     cardUsername: card.cardUsername, 
     cardNumber: card.cardNumber,
-    hideNumber: false,
+    hideCardNumber: false,
   }
 }

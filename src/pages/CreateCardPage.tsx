@@ -24,7 +24,9 @@ const CreateCardPage: React.FC = () => {
   const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
   const dispatch = useDispatch();
 
-  const { newCardName, newCardNumber, newCardUsername } = useAppContext();
+  const { 
+    newCardName, newCardNumber, newCardUsername, 
+    setCardName, setCardNumber, setCardUsername } = useAppContext();
 
   const [canShowModal, setCanShowModal] = useState(false);
 
@@ -38,14 +40,18 @@ const CreateCardPage: React.FC = () => {
       cardName: newCardName, 
       cardUsername: newCardUsername, 
       cardNumber: newCardNumber,
-      hideNumber: false,
+      hideCardNumber: false,
     }));
 
     setCanShowModal(true);
-
+    
     setTimeout(() => {
       setCanShowModal(false) 
       navigation.navigate('CardsPage')
+
+      setCardName('') 
+      setCardNumber('')
+      setCardUsername('')
     }, 5000);
 
   }
@@ -73,7 +79,7 @@ const CreateCardPage: React.FC = () => {
             cardName={newCardName === '' ? 'Nome do Cartão' : newCardName}
             cardUsername={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
             cardNumber={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
-            hideNumber={false}
+            hideCardNumber={false}
           />
         </View>
 

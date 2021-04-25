@@ -1,7 +1,12 @@
-export const toggleViewNumberCard = (id: number, hideCardNumber: boolean) => {
+type Card = {
+  cardId: number
+  hideCardNumber: boolean,
+}
+
+export const toggleViewNumberCard = (cardId:number, hideCardNumber:boolean) => {
   return {
     type: 'HIDE_CARDNUMBER',
-    id,
+    cardId,
     hideCardNumber,
   }
 }

@@ -20,7 +20,7 @@ type CardProps = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
 type SliderCard = {
@@ -39,10 +39,6 @@ const CardsPage: React.FC = () => {
   function createNewCard() {
     navigation.navigate('CreateCardPage');
   }
-
-  cards.map((card: CardProps) => {
-    console.log(`Cartao ${card.cardId} - ${card.cardName} \n ${card.cardNumber}`);
-  })
     
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
@@ -50,7 +46,7 @@ const CardsPage: React.FC = () => {
       cardName={item.cardName}
       cardUsername={item.cardUsername}
       cardNumber={item.cardNumber} 
-      hideNumber={item.hideNumber}
+      hideCardNumber={item.hideCardNumber}
       key={index}
     />
   ) 
