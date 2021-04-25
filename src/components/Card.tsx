@@ -10,8 +10,7 @@ type CardProps = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideCardNumber?: boolean,
-  canShow?: number,
+  hideNumber: boolean,
 }
 
 const Card: React.FC<CardProps> = (props) => {
@@ -25,12 +24,12 @@ const Card: React.FC<CardProps> = (props) => {
       key={props.cardNumber}
     >
       <View style={styles.cardHeader}>
-        <Text style={styles.cardName}>{props.cardName}</Text>
+        <Text style={styles.cardName}>{props.cardName} - {props.cardId}</Text>
         <Text style={styles.cardFlag}>Bandeira</Text>
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.cardUsername}>{props.cardUsername}</Text>
-        <Text style={styles.cardNumber}>{ props.hideCardNumber ? '**** **** **** ****' : props.cardNumber }</Text>
+        <Text style={styles.cardNumber}>{ props.hideNumber ? '**** **** **** ****' : props.cardNumber }</Text>
       </View>
     </LinearGradient>
   )

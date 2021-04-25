@@ -13,14 +13,14 @@ import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import Card from '../components/Card';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { setActiveCard } from '../store/actions/setActiveCard';
+import { setActiveCard } from '../store/actions/SetActiveCard';
 
 type CardProps = {
   cardId: number,
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideCardNumber?: boolean,
+  hideNumber: boolean,
 }
 
 type SliderCard = {
@@ -37,17 +37,20 @@ const CardsPage: React.FC = () => {
   const [index, setIndex] = useState(0);
  
   function createNewCard() {
-    navigation.navigate('CreateCardPage')
+    navigation.navigate('CreateCardPage');
   }
 
+  cards.map((card: CardProps) => {
+    console.log(`Cartao ${card.cardId} - ${card.cardName} \n ${card.cardNumber}`);
+  })
     
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
-      cardId={index}
+      cardId={item.cardId}
       cardName={item.cardName}
       cardUsername={item.cardUsername}
       cardNumber={item.cardNumber} 
-      hideCardNumber={item.hideCardNumber}
+      hideNumber={item.hideNumber}
       key={index}
     />
   ) 

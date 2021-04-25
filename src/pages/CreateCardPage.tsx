@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
 
 import { TextInputMask } from 'react-native-masked-text';
@@ -14,15 +14,17 @@ import Card from '../components/Card';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { ModalAlerts } from '../components/ModalAlerts';
+import { useAppContext } from '../context/Context';
+import { InputText } from '../components/InputText';
 
 
 const CreateCardPage: React.FC = () => {
   const navigation = useNavigation();
+
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
   const dispatch = useDispatch();
 
-  const [newCardName, setNewCardName] = useState('');
-  const [newCardUsername, setNewCardUsername] = useState('');
-  const [newCardNumber, setNewCardNumber] = useState('');
+  const { newCardName, newCardNumber, newCardUsername } = useAppContext();
 
   const [canShowModal, setCanShowModal] = useState(false);
 
@@ -32,7 +34,7 @@ const CreateCardPage: React.FC = () => {
 
   function submitCardCreate() {
     dispatch(createNewCard({
-      cardId: 0,
+      cardId: (cards.length),
       cardName: newCardName, 
       cardUsername: newCardUsername, 
       cardNumber: newCardNumber,
@@ -71,57 +73,22 @@ const CreateCardPage: React.FC = () => {
             cardName={newCardName === '' ? 'Nome do Cartão' : newCardName}
             cardUsername={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
             cardNumber={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
+            hideNumber={false}
           />
         </View>
 
         <View style={styles.formContainer}>
           <View style={styles.formInput}>
-
-            <View style={styles.formInputArea}>
-                <Text style={styles.formInputLabel}>Nome do cartão</Text>
-                <TextInput
-                  style={styles.formTextInput} 
-                  placeholder='Nome do Cartão' 
-                  onChangeText={setNewCardName}
-                  maxLength={32}
-                />
-              </View>
-
-              <View style={styles.formInputArea}>
-                <Text style={styles.formInputLabel}>Nome completo</Text>
-                <TextInput
-                  style={styles.formTextInput} 
-                  placeholder='Nome Completo' 
-                  onChangeText={setNewCardUsername}
-                  maxLength={30}
-                />
-              </View>
-
-              <View style={styles.formInputArea}>
-                <Text style={styles.formInputLabel}>Número</Text>
-                <TextInputMask
-                  style={styles.formTextInput}
-                  placeholder='Número'
-                  type={'credit-card'}
-                  options={{
-                    obfuscated: false,
-                  }}
-                  value={newCardNumber}
-                  onChangeText={(text) => {
-                    setNewCardNumber(text.toString())}
-                  } 
-                />
-              </View>
+            <InputText />
           </View>
-
 
           <View style={styles.createCardContainer}>
             <RectButton 
-              enabled={
-                newCardName.length >= 3 &&
-                newCardUsername.length >= 3 &&
-                newCardNumber.length === 19 && true
-              }
+              // enabled={
+              //   newCardName.length >= 3 &&
+              //   newCardUsername.length >= 3 &&
+              //   newCardNumber.length === 19 && true
+              // }
               onPress={submitCardCreate} 
               style={[
                 styles.createCardButton,
@@ -172,22 +139,6 @@ const styles = StyleSheet.create({
   },
   formInput: {
     marginBottom: 50,
-  },
-  formInputArea: {
-    marginTop: 15,
-  },
-  formInputLabel: {
-    fontFamily: fonts.heading,
-    fontSize: 9,
-    textTransform: 'uppercase'
-  },
-  formTextInput: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    borderRadius: 10,
-    marginTop: 5,
   },
 
   createCardContainer: {

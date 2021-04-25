@@ -6,33 +6,48 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons'; 
 import { Octicons } from '@expo/vector-icons';
 
-import { setActiveCard} from '../store/actions/setActiveCard'
+import { deleteCardAction } from '../store/actions/DeleteCard';
+
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { toggleViewNumberCard } from '../store/actions/toggleViewNumberCard';
 
 type Props = {
   activeCard: number,
 }
 
+type Card = {
+  cardId: number,
+  hideCardNumber: boolean,
+}
+
 const ActionButtons: React.FC<Props> = (props) => {
+  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
   const dispatch = useDispatch();
 
-  const [hideCardNumber, setHideCardNumber] = useState(Boolean)
-
-  if (hideCardNumber == true) {
-    setHideCardNumber(false)
+  function handleDeleteCard() {
+    cards.map(({ cardId }: Card) => {     
+      if (cardId === props.activeCard ) {
+        dispatch(deleteCardAction(cardId))
+      }
+    })
   }
 
-  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
-
-  // function handleHideCardNumber() {
-  //   dispatch(toggleHideCardNumber(props.activeCard))
-  // }
-
+  function handleToggleViewCardNumber() {
+    cards.map(({ cardId, hideCardNumber }: Card) => {
+      console.log(`ID do cartao: ${cardId} = Cartao ativo: ${props.activeCard}`);
+      
+      if (cardId === props.activeCard ) {
+        dispatch(toggleViewNumberCard(cardId, !hideCardNumber))
+      } else {
+        console.log(`Id do cartao: ${cardId} != do cartao ativo: ${props.activeCard}`);     
+      }
+    })
+  }
 
   return (
    <>
-    <RectButton activeOpacity={0.7} style={styles.button}>
+    <RectButton onPress={handleToggleViewCardNumber} activeOpacity={0.7} style={styles.button}>
       <Ionicons 
         name="eye-outline" 
         size={25} 
@@ -42,7 +57,7 @@ const ActionButtons: React.FC<Props> = (props) => {
       <Text style={styles.title}>Esconder número</Text>
     </RectButton>
 
-    <RectButton activeOpacity={0.7} style={styles.button}>
+    <RectButton onPress={handleDeleteCard} activeOpacity={0.7} style={styles.button}>
       <Octicons 
         name="trashcan" 
         size={25} 
