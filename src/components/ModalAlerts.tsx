@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
   modalCard: {
     backgroundColor: colors.white,
     width: Dimensions.get('window').width,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    height: 150,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: 180,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,

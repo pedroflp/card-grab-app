@@ -11,6 +11,8 @@ import { deleteCardAction } from '../store/actions/DeleteCard';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { toggleViewNumberCard } from '../store/actions/toggleViewNumberCard';
+import { useAppContext } from '../context/Context';
+import { createNewCard } from '../store/actions/CreateNewCard';
 
 type Props = {
   activeCard: number,
@@ -18,46 +20,57 @@ type Props = {
 
 type Card = {
   cardId: number,
+  cardName: string, 
+  cardUsername: string, 
+  cardNumber: string,
   hideCardNumber: boolean,
 }
 
 const ActionButtons: React.FC<Props> = (props) => {
-  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
+  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
   const dispatch = useDispatch();
-
+  
+  const { hideCardNumber, toogleHideCardNumber } = useAppContext();
+  
   function handleDeleteCard() {
-    cards.map(({ cardId }: Card) => {     
-      if (cardId === props.activeCard ) {
-        dispatch(deleteCardAction(cardId))
-      }
-    })
+    dispatch(deleteCardAction({type: 'DELETE_CARD'}))
   }
 
-  function handleToggleViewCardNumber() {
-    cards.map(({ cardId, hideCardNumber }: Card) => {
-      console.log(`ID do cartao: ${cardId} = Cartao ativo: ${props.activeCard}`);
+  function createcards() {
+    dispatch(createNewCard({
+      cardId: (cards.length),
+      cardName: 'newCardName', 
+      cardUsername: 'newCardUsername', 
+      cardNumber: 'newCardNumber',
+      hideCardNumber: false,
+    }));
+  }
+
+  function showcards() {
+    cards.map((card: Card) => {     
+      console.log(card);
       
-      if (cardId === props.activeCard ) {
-        dispatch(toggleViewNumberCard(cardId, !hideCardNumber))
-      } else {
-        console.log(`Id do cartao: ${cardId} != do cartao ativo: ${props.activeCard}`);     
-      }
     })
   }
 
   return (
    <>
-    <RectButton onPress={handleToggleViewCardNumber} activeOpacity={0.7} style={styles.button}>
+    <RectButton onPress={() => toogleHideCardNumber()} activeOpacity={0.7} style={styles.button}>
       <Ionicons 
-        name="eye-outline" 
+        name={ hideCardNumber ? "eye-outline" : "eye-off-outline"} 
         size={25} 
         style={{ width: 25 }}
         color="#2D2940" 
-      />
-      <Text style={styles.title}>Esconder número</Text>
+      /> 
+      <Text style={styles.title}>{ hideCardNumber ? 'Mostrar número' : 'Esconder número'}</Text>
     </RectButton>
 
-    <RectButton onPress={handleDeleteCard} activeOpacity={0.7} style={styles.button}>
+    <RectButton 
+      enabled={false}
+      onPress={handleDeleteCard} 
+      activeOpacity={0.7} 
+      style={[styles.button, styles.disabled]}
+    >
       <Octicons 
         name="trashcan" 
         size={25} 
@@ -83,6 +96,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     padding: 25,
     borderRadius: 10,
+  },
+  disabled: {
+    opacity: 0.4,
   },
   title: {
     marginLeft: 22,

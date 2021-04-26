@@ -7,7 +7,7 @@ import fonts from '../styles/fonts';
 
 
 const InputText: React.FC = () => {
-  const {newCardNumber, setCardName, setCardUsername, setCardNumber } = useAppContext();
+  const { newCardName, newCardUsername, newCardNumber, setCardName, setCardUsername, setCardNumber } = useAppContext();
 
   return (
   <>
@@ -18,6 +18,7 @@ const InputText: React.FC = () => {
       style={styles.formTextInput} 
       placeholder='Nome do Cartão' 
       onChangeText={setCardName}
+      value={newCardName}
       maxLength={32}
     />
   </View>
@@ -28,6 +29,7 @@ const InputText: React.FC = () => {
       style={styles.formTextInput} 
       placeholder='Nome Completo' 
       onChangeText={setCardUsername}
+      value={newCardUsername}
       maxLength={30}
     />
   </View>

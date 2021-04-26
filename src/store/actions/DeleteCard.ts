@@ -3,12 +3,11 @@ type Card = {
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
-export const deleteCardAction = (id: number) => {
+export const deleteCardAction = ({type}: any) => {
   return {
-    type: 'DELETE_CARD',
-    id: id
+    type,
   }
 }

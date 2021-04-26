@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { RootStateOrAny, useSelector } from 'react-redux';
+import { useAppContext } from '../context/Context';
+import { CardFlag } from './CardFlag';
 
 type CardProps = {
   cardId: number,
   cardName: string,
   cardUsername: string,
   cardNumber: string,
-  hideNumber: boolean,
+  hideCardNumber: boolean,
 }
 
 const Card: React.FC<CardProps> = (props) => {
+  const { isCreatingCard, hideCardNumber } = useAppContext()
+
 
   return (
       <LinearGradient 
@@ -24,12 +29,18 @@ const Card: React.FC<CardProps> = (props) => {
       key={props.cardNumber}
     >
       <View style={styles.cardHeader}>
-        <Text style={styles.cardName}>{props.cardName} - {props.cardId}</Text>
-        <Text style={styles.cardFlag}>Bandeira</Text>
+        <Text style={styles.cardName}>{props.cardName}</Text>
+        <CardFlag cardNumber={props.cardNumber} />
       </View>
       <View style={styles.cardFooter}>
         <Text style={styles.cardUsername}>{props.cardUsername}</Text>
-        <Text style={styles.cardNumber}>{ props.hideNumber ? '**** **** **** ****' : props.cardNumber }</Text>
+        <Text style={styles.cardNumber}>
+          { 
+            hideCardNumber && !isCreatingCard ? '**** **** **** ****' 
+            : hideCardNumber && isCreatingCard ? props.cardNumber 
+            : props.cardNumber
+          }
+        </Text>
       </View>
     </LinearGradient>
   )
@@ -58,11 +69,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     color: colors.white,
     textTransform: 'capitalize'
-  },
-  cardFlag: {
-    fontFamily: fonts.heading,
-    fontSize: 20,
-    color: colors.white
   },
 
   cardFooter: {
