@@ -12,24 +12,24 @@ type CardProps = {
 const ModalAlerts: React.FC<CardProps> = (props) => {
   return (
     <View>
-        <Modal
-          style={styles.modal}
-          isVisible={true}
-          animationIn={'slideInUp'}
-          animationOut={'slideOutDown'}
-          hasBackdrop={true}
-          backdropColor={'black'}
-          backdropOpacity={0.7}
-          deviceWidth={Dimensions.get('window').width}
-          deviceHeight={Dimensions.get('window').height}
-          backdropTransitionInTiming={400}
-          backdropTransitionOutTiming={400}
-        >
-          <View style={styles.modalCard}>
-            <Text style={styles.modalCardEmoji}>{props.emoji}</Text>
-            <Text style={styles.modalCardText}>{props.message}</Text>
-          </View>
-        </Modal>
+      <Modal
+        style={styles.modal}
+        isVisible={true}
+        animationIn={'slideInUp'}
+        animationOut={'slideOutDown'}
+        hasBackdrop={true}
+        backdropColor={'black'}
+        backdropOpacity={0.7}
+        deviceWidth={Dimensions.get('window').width}
+        deviceHeight={Dimensions.get('window').height}
+        backdropTransitionInTiming={400}
+        backdropTransitionOutTiming={400}
+      >
+        <View style={styles.modalCard}>
+          <Text style={styles.modalCardEmoji}>{props.emoji}</Text>
+          <Text style={styles.modalCardText}>{props.message}</Text>
+        </View>
+      </Modal>
     </View>
   );
 }

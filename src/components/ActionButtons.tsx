@@ -27,30 +27,12 @@ type Card = {
 }
 
 const ActionButtons: React.FC<Props> = (props) => {
-  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
   const dispatch = useDispatch();
   
   const { hideCardNumber, toogleHideCardNumber } = useAppContext();
   
   function handleDeleteCard() {
     dispatch(deleteCardAction({type: 'DELETE_CARD'}))
-  }
-
-  function createcards() {
-    dispatch(createNewCard({
-      cardId: (cards.length),
-      cardName: 'newCardName', 
-      cardUsername: 'newCardUsername', 
-      cardNumber: 'newCardNumber',
-      hideCardNumber: false,
-    }));
-  }
-
-  function showcards() {
-    cards.map((card: Card) => {     
-      console.log(card);
-      
-    })
   }
 
   return (

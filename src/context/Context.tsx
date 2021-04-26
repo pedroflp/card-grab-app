@@ -38,15 +38,11 @@ const AppContext: React.FC<Props> = (props) =>{
   }
 
   function checkIsCreatingCard(value: boolean) {
-    setIsCreatingCard(value)
-    console.log(isCreatingCard);
-    
+    setIsCreatingCard(value);   
   }
 
   function toogleHideCardNumber() {
-    setHideCardNumber(!hideCardNumber)
-    console.log(hideCardNumber);
-    
+    setHideCardNumber(!hideCardNumber);   
   }
 
   return(

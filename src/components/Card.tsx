@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { RootStateOrAny, useSelector } from 'react-redux';
 import { useAppContext } from '../context/Context';
 import { CardFlag } from './CardFlag';
 
