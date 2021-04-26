@@ -8,10 +8,14 @@ const Context = createContext({
   newCardName: '',
   newCardUsername: '',
   newCardNumber: '',
+  isCreatingCard: false,
+  hideCardNumber: false,
 
-  setCardName: (value: any) => {},
-  setCardUsername: (value: any) => {},
-  setCardNumber: (value: any) => {}
+  setCardName: (value: string) => {},
+  setCardUsername: (value: string) => {},
+  setCardNumber: (value: string) => {},
+  checkIsCreatingCard: (value: boolean) => {},
+  toogleHideCardNumber: () => {}
 })
 
 const AppContext: React.FC<Props> = (props) =>{
@@ -20,19 +24,36 @@ const AppContext: React.FC<Props> = (props) =>{
   const [newCardUsername, setNewCardUsername] = useState('');
   const [newCardNumber, setNewCardNumber] = useState('');
 
-  function setCardName(value: any) {
+  const [isCreatingCard, setIsCreatingCard] = useState(false);
+  const [hideCardNumber, setHideCardNumber] = useState(false);
+
+  function setCardName(value: string) {
     setNewCardName(value)
   }
-  function setCardUsername(value: any) {
+  function setCardUsername(value: string) {
     setNewCardUsername(value)
   }
-  function setCardNumber(value: any) {
+  function setCardNumber(value: string) {
     setNewCardNumber(value)
+  }
+
+  function checkIsCreatingCard(value: boolean) {
+    setIsCreatingCard(value)
+    console.log(isCreatingCard);
+    
+  }
+
+  function toogleHideCardNumber() {
+    setHideCardNumber(!hideCardNumber)
+    console.log(hideCardNumber);
+    
   }
 
   return(
     <Context.Provider 
       value={{
+        hideCardNumber, toogleHideCardNumber,
+        isCreatingCard, checkIsCreatingCard,
         newCardName, newCardUsername, newCardNumber, 
         setCardName, setCardUsername, setCardNumber 
       }}

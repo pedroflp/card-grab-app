@@ -4,7 +4,7 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
 
 import { TextInputMask } from 'react-native-masked-text';
-import { RectButton } from 'react-native-gesture-handler';
+import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons'
 
 import { createNewCard } from '../store/actions/CreateNewCard';
@@ -21,8 +21,10 @@ import { InputText } from '../components/InputText';
 const CreateCardPage: React.FC = () => {
   const navigation = useNavigation();
 
-  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
+  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
   const dispatch = useDispatch();
+
+  const { checkIsCreatingCard } = useAppContext()
 
   const { 
     newCardName, newCardNumber, newCardUsername, 
@@ -32,6 +34,7 @@ const CreateCardPage: React.FC = () => {
 
   function goBackCardsPage() {
     navigation.navigate('CardsPage')
+    checkIsCreatingCard(false)
   }
 
   function submitCardCreate() {
@@ -48,7 +51,7 @@ const CreateCardPage: React.FC = () => {
     setTimeout(() => {
       setCanShowModal(false) 
       navigation.navigate('CardsPage')
-
+      checkIsCreatingCard(false)
       setCardName('') 
       setCardNumber('')
       setCardUsername('')
@@ -58,62 +61,61 @@ const CreateCardPage: React.FC = () => {
 
   return (
     <SafeAreaView>
-      <KeyboardAvoidingView 
-        style={styles.pageContainer}
-        behavior={ Platform.OS === 'ios' ? 'height' : 'padding' }
-      >
-        <View style={styles.headerContainer}>
-          <RectButton onPress={goBackCardsPage} style={{ marginRight: 5 }}>
-            <MaterialIcons 
-              name="keyboard-arrow-left" 
-              size={30} 
-              color="black" 
-            />
-          </RectButton>
-          <Text style={styles.headerTitle}>Adicionar cartão</Text>
-        </View>
+    <ScrollView showsVerticalScrollIndicator={false}>
+         <View style={styles.pageContainer}>
+          <View style={styles.headerContainer}>
+              <RectButton onPress={goBackCardsPage} style={{ marginRight: 5 }}>
+                <MaterialIcons 
+                  name="keyboard-arrow-left" 
+                  size={30} 
+                  color="black" 
+                />
+              </RectButton>
+              <Text style={styles.headerTitle}>Adicionar cartão</Text>
+            </View>
 
-        <View style={styles.cardContainer}>
-          <Card
-            cardId={0}
-            cardName={newCardName === '' ? 'Nome do Cartão' : newCardName}
-            cardUsername={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
-            cardNumber={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
-            hideCardNumber={false}
-          />
-        </View>
+            <View style={styles.cardContainer}>
+              <Card
+                cardId={0}
+                cardName={newCardName === '' ? 'Nome do Cartão' : newCardName}
+                cardUsername={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
+                cardNumber={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
+                hideCardNumber={false}
+              />
+            </View>
 
-        <View style={styles.formContainer}>
-          <View style={styles.formInput}>
-            <InputText />
-          </View>
+            <View style={styles.formContainer}>
+              <View style={styles.formInput}>
+                <InputText />
+              </View>
 
-          <View style={styles.createCardContainer}>
-            <RectButton 
-              // enabled={
-              //   newCardName.length >= 3 &&
-              //   newCardUsername.length >= 3 &&
-              //   newCardNumber.length === 19 && true
-              // }
-              onPress={submitCardCreate} 
-              style={[
-                styles.createCardButton,
-                
-                newCardName.length < 3 ||
-                newCardUsername.length < 3 ||
-                newCardNumber.length < 19
-                ? styles.disabled : styles.enable
-              ]}
-            >
-              <Text style={styles.createCardButtonTitle}>Adicionar</Text>
-            </RectButton>
-          </View>
-        </View>
+              <View style={styles.createCardContainer}>
+                <RectButton 
+                  enabled={
+                    newCardName.length >= 3 &&
+                    newCardUsername.length >= 3 &&
+                    newCardNumber.length === 19 && true
+                  }
+                  onPress={submitCardCreate} 
+                  style={[
+                    styles.createCardButton,
+                    
+                    newCardName.length < 3 ||
+                    newCardUsername.length < 3 ||
+                    newCardNumber.length < 19
+                    ? styles.disabled : styles.enable
+                  ]}
+                >
+                  <Text style={styles.createCardButtonTitle}>Adicionar</Text>
+                </RectButton>
+              </View>
+            </View>
 
-      {
-        canShowModal && <ModalAlerts emoji={'🤑'} message={`Seu cartão ${newCardName}, foi criado!`} />
-      }
-     </KeyboardAvoidingView>
+          {
+            canShowModal && <ModalAlerts emoji={'🤑'} message={`Seu cartão ${newCardName}, foi criado!`} />
+          }
+         </View>
+    </ScrollView>
   </SafeAreaView>  
   );
 }
@@ -153,7 +155,6 @@ const styles = StyleSheet.create({
   },
   createCardButton: {
     paddingVertical: 24,
-    paddingHorizontal: 122,
     width: Dimensions.get('window').width*0.85,
     backgroundColor: colors.blue,
     justifyContent: 'center',

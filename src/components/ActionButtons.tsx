@@ -11,6 +11,8 @@ import { deleteCardAction } from '../store/actions/DeleteCard';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { toggleViewNumberCard } from '../store/actions/toggleViewNumberCard';
+import { useAppContext } from '../context/Context';
+import { createNewCard } from '../store/actions/CreateNewCard';
 
 type Props = {
   activeCard: number,
@@ -25,48 +27,50 @@ type Card = {
 }
 
 const ActionButtons: React.FC<Props> = (props) => {
-  const cards = useSelector((state: RootStateOrAny) => state.createCard.data);
+  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
   const dispatch = useDispatch();
   
+  const { hideCardNumber, toogleHideCardNumber } = useAppContext();
+  
   function handleDeleteCard() {
-    cards.map((card: Card) => {     
-      if (card.cardId === props.activeCard ) {
-        dispatch(deleteCardAction(card.cardId))
-      }
-    })
+    dispatch(deleteCardAction({type: 'DELETE_CARD'}))
+  }
+
+  function createcards() {
+    dispatch(createNewCard({
+      cardId: (cards.length),
+      cardName: 'newCardName', 
+      cardUsername: 'newCardUsername', 
+      cardNumber: 'newCardNumber',
+      hideCardNumber: false,
+    }));
   }
 
   function showcards() {
-    cards.map((card: Card) => {
+    cards.map((card: Card) => {     
       console.log(card);
       
     })
   }
 
-  function handleToggleViewCardNumber() {
-    cards.map((card: Card) => {    
-      if (card.cardId === props.activeCard ) {
-        dispatch(toggleViewNumberCard(
-          card.cardId,
-          !card.hideCardNumber,
-        ))
-      }
-    })
-  }
-
   return (
    <>
-    <RectButton onPress={handleToggleViewCardNumber} activeOpacity={0.7} style={styles.button}>
+    <RectButton onPress={() => toogleHideCardNumber()} activeOpacity={0.7} style={styles.button}>
       <Ionicons 
-        name="eye-outline" 
+        name={ hideCardNumber ? "eye-outline" : "eye-off-outline"} 
         size={25} 
         style={{ width: 25 }}
         color="#2D2940" 
-      />
-      <Text style={styles.title}>Esconder número</Text>
+      /> 
+      <Text style={styles.title}>{ hideCardNumber ? 'Mostrar número' : 'Esconder número'}</Text>
     </RectButton>
 
-    <RectButton onPress={handleDeleteCard} activeOpacity={0.7} style={styles.button}>
+    <RectButton 
+      enabled={false}
+      onPress={handleDeleteCard} 
+      activeOpacity={0.7} 
+      style={[styles.button, styles.disabled]}
+    >
       <Octicons 
         name="trashcan" 
         size={25} 
@@ -74,9 +78,6 @@ const ActionButtons: React.FC<Props> = (props) => {
         color="red" 
       />
       <Text style={styles.titleRed}>Apagar cartão</Text>
-    </RectButton>
-    <RectButton onPress={showcards} activeOpacity={0.7} style={styles.button}>
-      <Text style={styles.titleRed}>show</Text>
     </RectButton>
    </>
   );
@@ -95,6 +96,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     padding: 25,
     borderRadius: 10,
+  },
+  disabled: {
+    opacity: 0.4,
   },
   title: {
     marginLeft: 22,

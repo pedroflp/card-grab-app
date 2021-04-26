@@ -6,8 +6,9 @@ type Card = {
 
 export default function deleteCard(state = INITIAL_STATE, action: any) {
   if (action.type === 'DELETE_CARD') {
-    console.log(state);
-    return {...state, data: state.data.filter((card: Card) => card.cardId !== action.id)}
+    return {
+     ...state, data: state.data.filter((card: Card) => card.cardId !== state.activeCard)
+    }
   } else {
     return state
   }
