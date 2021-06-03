@@ -4,40 +4,35 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { useAppContext } from '../context/Context';
 import { CardFlag } from './CardFlag';
 
 type CardProps = {
-  cardId: number,
-  cardName: string,
-  cardUsername: string,
-  cardNumber: string,
-  hideCardNumber: boolean,
+  id: number,
+  name: string,
+  username: string,
+  number: string,
+  hideNumber: boolean,
 }
 
 const Card: React.FC<CardProps> = (props) => {
-  const { isCreatingCard, hideCardNumber } = useAppContext()
-
-
   return (
       <LinearGradient 
-      colors={['#FC6767b3', '#EC008Cb5']} 
-      start={[0,1]}
-      end={[1,0]}
-      style={styles.card}
-      key={props.cardNumber}
-    >
+        colors={[ '#FC6767b3', '#EC008Cb5' ]} 
+        start={[ 0,1 ]}
+        end={[ 1,0 ]}
+        style={styles.card}
+      >
       <View style={styles.cardHeader}>
-        <Text style={styles.cardName}>{props.cardName}</Text>
-        <CardFlag cardNumber={props.cardNumber} />
+        <Text style={styles.cardName}>{props.name}</Text>
+        <CardFlag cardNumber={props.number} />
       </View>
       <View style={styles.cardFooter}>
-        <Text style={styles.cardUsername}>{props.cardUsername}</Text>
+        <Text style={styles.cardUsername}>{props.username}</Text>
         <Text style={styles.cardNumber}>
           { 
-            hideCardNumber && !isCreatingCard ? '**** **** **** ****' 
-            : hideCardNumber && isCreatingCard ? props.cardNumber 
-            : props.cardNumber
+            props.hideNumber 
+            ? '**** **** **** ****' 
+            : props.number 
           }
         </Text>
       </View>

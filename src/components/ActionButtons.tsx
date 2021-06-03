@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, StyleSheet, Dimensions } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
@@ -6,52 +6,35 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons'; 
 import { Octicons } from '@expo/vector-icons';
 
-import { deleteCardAction } from '../store/actions/DeleteCard';
+import { deleteCard, hideNumber } from '../store/cards/actions/card';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { toggleViewNumberCard } from '../store/actions/toggleViewNumberCard';
-import { useAppContext } from '../context/Context';
-import { createNewCard } from '../store/actions/CreateNewCard';
 
-type Props = {
-  activeCard: number,
-}
-
-type Card = {
-  cardId: number,
-  cardName: string, 
-  cardUsername: string, 
-  cardNumber: string,
-  hideCardNumber: boolean,
-}
-
-const ActionButtons: React.FC<Props> = (props) => {
+const ActionButtons: React.FC = ({ card }: any) => {
   const dispatch = useDispatch();
-  
-  const { hideCardNumber, toogleHideCardNumber } = useAppContext();
-  
-  function handleDeleteCard() {
-    dispatch(deleteCardAction({type: 'DELETE_CARD'}))
-  }
+  const activeCard = useSelector((state: RootStateOrAny) => state.cards.activeCard);
 
   return (
    <>
-    <RectButton onPress={() => toogleHideCardNumber()} activeOpacity={0.7} style={styles.button}>
+    <RectButton 
+      activeOpacity={0.7} 
+      style={styles.button}
+      onPress={() => dispatch(hideNumber(activeCard))}
+    >
       <Ionicons 
-        name={ hideCardNumber ? "eye-outline" : "eye-off-outline"} 
+        name={ activeCard.hideNumber ? "eye-outline" : "eye-off-outline"} 
         size={25} 
         style={{ width: 25 }}
         color="#2D2940" 
       /> 
-      <Text style={styles.title}>{ hideCardNumber ? 'Mostrar número' : 'Esconder número'}</Text>
+      <Text style={styles.title}>{ activeCard.hideNumber ? 'Mostrar número' : 'Esconder número'}</Text>
     </RectButton>
 
     <RectButton 
-      enabled={false}
-      onPress={handleDeleteCard} 
       activeOpacity={0.7} 
-      style={[styles.button, styles.disabled]}
+      style={[styles.button]}
+      onPress={() => dispatch(deleteCard(activeCard))}
     >
       <Octicons 
         name="trashcan" 

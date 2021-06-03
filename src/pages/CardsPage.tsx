@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import { connect, RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Text, SafeAreaView, View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
-
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/core';
+
+import { currActiveCard } from '../store/cards/actions/card';
 
 import { ActionButtons } from '../components/ActionButtons';
+import NoCard from '../components/NoCard';
+import Card from '../components/Card';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import Card from '../components/Card';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { setActiveCard } from '../store/actions/SetActiveCard';
 import { useAppContext } from '../context/Context';
-import NoCard from '../components/NoCard';
 
 type CardProps = {
-  cardId: number,
-  cardName: string,
-  cardUsername: string,
-  cardNumber: string,
-  hideCardNumber: boolean,
+  id: number,
+  name: string,
+  username: string,
+  number: string,
+  hideNumber: boolean,
 }
 
 type SliderCard = {
@@ -31,103 +30,113 @@ type SliderCard = {
 }
 
 const CardsPage: React.FC = () => {
-  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
+  const navigation = useNavigation()
 
-  const { checkIsCreatingCard } = useAppContext()
+  const dispatch = useDispatch()
+  const cards = useSelector((state: RootStateOrAny) => state.cards)
 
-  const navigation = useNavigation();
+  const { needUpdate, updateCards } = useAppContext()
 
+  useEffect(() => {  
+   console.log(cards.activeCard) 
+  },[cards])
   
-  const [haveCards, setHaveCards] = useState(false)
-
-  const [cardsCreated, setCardsCreated] = useState(cards)
-
-
-  useEffect(() => {
-    setCardsCreated(cards);
-    console.log(`Quantidade de cartoes criados: ${cards.length}`);
-    
-    if (cards.length > 0) {
-      setHaveCards(true);
-    } else {
-      setHaveCards(false)
-    }
-  }, [cards.length])
-
-  const dispatch = useDispatch();
-
+  const [myCards, setMyCards] = useState([])
+  
   const [index, setIndex] = useState(0);
- 
-  function createNewCard() {
-    navigation.navigate('CreateCardPage');
-    checkIsCreatingCard(true);
-  }
+
 
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
-      cardId={item.cardId}
-      cardName={item.cardName}
-      cardUsername={item.cardUsername}
-      cardNumber={item.cardNumber} 
-      hideCardNumber={item.hideCardNumber}
+      id={index}
+      name={item.name}
+      username={item.username}
+      number={item.number} 
+      hideNumber={item.hideNumber}
       key={index}
     />
-  ) 
-    
+  )
+  useEffect(() => {
+    if (cards.cards) {
+      setMyCards(cards.cards)
+      myCards.filter((card, i) => {    
+        if (index === i) dispatch(currActiveCard(card))
+        else {
+          dispatch(currActiveCard(myCards[0]))
+        }
+      })
+    }
+  }, [cards.cards, myCards, index])
+
+  useEffect(() => {
+    updateCards(true)
+    setIndex(0)
+    setTimeout(() => {
+      updateCards(false)
+    }, 500);
+  }, [cards.cards.length])
+
   return (
     <SafeAreaView>
      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.pageContainer}>
           <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}>Cartões</Text>
-            <RectButton onPress={createNewCard} activeOpacity={0.8} style={styles.createCardButton}>
-              <Entypo  name='plus' size={25} />
+            <Text style={styles.headerTitle}>Seus Cartões</Text>
+            <RectButton onPress={() => navigation.navigate('CreateCardPage')} activeOpacity={0.8} style={styles.createCardButton}>
+              <Entypo name='plus' size={25} />
             </RectButton>
           </View>
 
-        { haveCards ?
+        { myCards.length > 0
+          ?
           <>
 
           <View style={styles.cardContainer}>
-            <Carousel
-              layout="default"
-              layoutCardOffset={0}
-              data={cards}
-              renderItem={SliderCardItem}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={Dimensions.get('window').width*0.85}
-              onSnapToItem={(index) => {
-                setIndex(index);
-                dispatch(setActiveCard(index))
-              }}
-              useScrollView={false}
-            />
-            <Pagination
-              dotsLength={cards.length}
-              activeDotIndex={index}
-              dotStyle={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                marginHorizontal: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.6)'
-              }}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={1}
-              tappableDots={false}
-            />
-        </View>
+            { needUpdate ? 
+              <>
+                <Carousel
+                layout="stack"
+                data={myCards}
+                renderItem={SliderCardItem}
+                sliderWidth={Dimensions.get('window').width}
+                itemWidth={Dimensions.get('window').width*0.85}
+                onSnapToItem={(index) => {
+                  setIndex(index);
+                }}
+                useScrollView={false}
+              />
+              <Pagination
+                dotsLength={myCards.length}
+                activeDotIndex={index}
+                dotStyle={{
+                  width: 15,
+                  height: 5,
+                  borderRadius: 5,
+                  marginHorizontal: -5,
+                  backgroundColor: 'rgba(82, 82, 82, 0.6)'
+                }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.85}
+              />
+            </>
+              : 
+              <NoCard>
+                <ActivityIndicator size="large" color="#d1d1d1" />
+              </NoCard>
+            }
+          </View>
 
           <View style={styles.actionContainer}>
             <Text style={styles.actionTitle}>Ações</Text>
             <View style={styles.actionButtonList}>
-              <ActionButtons activeCard={index} />
+              <ActionButtons />
             </View>
           </View>
 
           </>
-          : <NoCard />
-          }
+          : 
+          <NoCard />
+        }
 
         </View>
      </ScrollView>
@@ -135,11 +144,7 @@ const CardsPage: React.FC = () => {
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  cards: state.cards,
-})
-
-export default connect(mapStateToProps, null)(CardsPage)
+export default CardsPage;
 
 
 const styles = StyleSheet.create({
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fonts.heading,
-    fontSize: 40,
+    fontSize: 36,
   },
   createCardButton: {
     width: 45,

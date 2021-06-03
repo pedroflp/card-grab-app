@@ -8,14 +8,12 @@ const Context = createContext({
   newCardName: '',
   newCardUsername: '',
   newCardNumber: '',
-  isCreatingCard: false,
-  hideCardNumber: false,
+  needUpdate: false,
 
   setCardName: (value: string) => {},
   setCardUsername: (value: string) => {},
   setCardNumber: (value: string) => {},
-  checkIsCreatingCard: (value: boolean) => {},
-  toogleHideCardNumber: () => {}
+  updateCards: (value: boolean) => {},
 })
 
 const AppContext: React.FC<Props> = (props) =>{
@@ -23,9 +21,7 @@ const AppContext: React.FC<Props> = (props) =>{
   const [newCardName, setNewCardName] = useState('');
   const [newCardUsername, setNewCardUsername] = useState('');
   const [newCardNumber, setNewCardNumber] = useState('');
-
-  const [isCreatingCard, setIsCreatingCard] = useState(false);
-  const [hideCardNumber, setHideCardNumber] = useState(false);
+  const [needUpdate, setNeedUpdate] = useState(false)
 
   function setCardName(value: string) {
     setNewCardName(value)
@@ -37,21 +33,17 @@ const AppContext: React.FC<Props> = (props) =>{
     setNewCardNumber(value)
   }
 
-  function checkIsCreatingCard(value: boolean) {
-    setIsCreatingCard(value);   
-  }
-
-  function toogleHideCardNumber() {
-    setHideCardNumber(!hideCardNumber);   
+  function updateCards(value: boolean) {
+    setNeedUpdate(value)
   }
 
   return(
     <Context.Provider 
       value={{
-        hideCardNumber, toogleHideCardNumber,
-        isCreatingCard, checkIsCreatingCard,
         newCardName, newCardUsername, newCardNumber, 
-        setCardName, setCardUsername, setCardNumber 
+        setCardName, setCardUsername, setCardNumber, 
+        needUpdate, 
+        updateCards,
       }}
     >
       {props.children}

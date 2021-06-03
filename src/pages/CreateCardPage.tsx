@@ -7,7 +7,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons'
 
-import { createNewCard } from '../store/actions/CreateNewCard';
+import { createCard } from '../store/cards/actions/card';
 
 import Card from '../components/Card';
 
@@ -20,8 +20,7 @@ import { InputText } from '../components/InputText';
 
 const CreateCardPage: React.FC = () => {
   const navigation = useNavigation();
-
-  const cards = useSelector((state: RootStateOrAny) => state.createCardReducer.data);
+  
   const dispatch = useDispatch();
 
   const { checkIsCreatingCard } = useAppContext()
@@ -38,8 +37,7 @@ const CreateCardPage: React.FC = () => {
   }
 
   function submitCardCreate() {
-    dispatch(createNewCard({
-      cardId: (cards.length),
+    dispatch(createCard({
       cardName: newCardName, 
       cardUsername: newCardUsername, 
       cardNumber: newCardNumber,
@@ -76,11 +74,11 @@ const CreateCardPage: React.FC = () => {
 
             <View style={styles.cardContainer}>
               <Card
-                cardId={0}
-                cardName={newCardName === '' ? 'Nome do Cartão' : newCardName}
-                cardUsername={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
-                cardNumber={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
-                hideCardNumber={false}
+                id={0}
+                name={newCardName === '' ? 'Nome do Cartão' : newCardName}
+                username={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
+                number={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
+                hideNumber={false}
               />
             </View>
 
