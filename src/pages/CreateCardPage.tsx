@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
 
 import { TextInputMask } from 'react-native-masked-text';
@@ -23,18 +23,12 @@ const CreateCardPage: React.FC = () => {
   
   const dispatch = useDispatch();
 
-  const { checkIsCreatingCard } = useAppContext()
-
   const { 
     newCardName, newCardNumber, newCardUsername, 
     setCardName, setCardNumber, setCardUsername } = useAppContext();
 
   const [canShowModal, setCanShowModal] = useState(false);
 
-  function goBackCardsPage() {
-    navigation.navigate('CardsPage')
-    checkIsCreatingCard(false)
-  }
 
   function submitCardCreate() {
     dispatch(createCard({
@@ -47,13 +41,12 @@ const CreateCardPage: React.FC = () => {
     setCanShowModal(true);
     
     setTimeout(() => {
-      setCanShowModal(false) 
-      navigation.navigate('CardsPage')
-      checkIsCreatingCard(false)
       setCardName('') 
       setCardNumber('')
       setCardUsername('')
-    }, 5000);
+      navigation.navigate('CardsPage')
+      setCanShowModal(false) 
+    }, 3000);
 
   }
 
@@ -62,7 +55,7 @@ const CreateCardPage: React.FC = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
          <View style={styles.pageContainer}>
           <View style={styles.headerContainer}>
-              <RectButton onPress={goBackCardsPage} style={{ marginRight: 5 }}>
+              <RectButton onPress={() => navigation.navigate('CardsPage')} style={{ marginRight: 5 }}>
                 <MaterialIcons 
                   name="keyboard-arrow-left" 
                   size={30} 

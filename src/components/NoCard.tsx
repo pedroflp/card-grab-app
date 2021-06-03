@@ -4,9 +4,12 @@ import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
-// import { Container } from './styles';
+type Props = {
+  topChildren: React.ReactChild,
+  centerChildren: React.ReactChild,
+}
 
-const NoCard: React.FC = () => {
+const NoCard: React.FC<Props> = ({ topChildren, centerChildren }) => {
   return (
     <LinearGradient
       colors={['rgba(0,0,0,0.05)', 'rgba(0,0,0,0)']}
@@ -15,8 +18,8 @@ const NoCard: React.FC = () => {
       style={styles.noCard}
     >
       <View style={styles.noCardHeader}>
-        <Text style={styles.noCardEmoji}>💳</Text>
-        <Text style={styles.noCardText}>Você não tem nenhum cartão criado!</Text>
+        <Text style={styles.noCardEmoji}>{topChildren}</Text>
+        <Text style={styles.noCardText}>{centerChildren}</Text>
       </View>
     </LinearGradient>
   );

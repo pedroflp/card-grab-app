@@ -45,7 +45,6 @@ const CardsPage: React.FC = () => {
   
   const [index, setIndex] = useState(0);
 
-
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
       id={index}
@@ -92,7 +91,7 @@ const CardsPage: React.FC = () => {
           <>
 
           <View style={styles.cardContainer}>
-            { needUpdate ? 
+            { !needUpdate ? 
               <>
                 <Carousel
                 layout="stack"
@@ -120,9 +119,10 @@ const CardsPage: React.FC = () => {
               />
             </>
               : 
-              <NoCard>
-                <ActivityIndicator size="large" color="#d1d1d1" />
-              </NoCard>
+              <NoCard 
+                topChildren={<ActivityIndicator size="large" color="#cccccc" />}
+                centerChildren={<Text>Carregando seus cartões...</Text>}
+              />
             }
           </View>
 
@@ -135,7 +135,10 @@ const CardsPage: React.FC = () => {
 
           </>
           : 
-          <NoCard />
+          <NoCard 
+            topChildren={<Text>💳</Text>} 
+            centerChildren={<Text>Você ainda não criou nenhum cartão!</Text>} 
+          />
         }
 
         </View>
