@@ -3,6 +3,12 @@ type Card = {
   cardUsername: string,
   cardNumber: string,
   hideCardNumber: boolean,
+  style: {
+    cardColor: {
+      left: string,
+      right: string,
+    }
+  }
 }
 
 export const createCard = (card: Card) => {
@@ -12,6 +18,12 @@ export const createCard = (card: Card) => {
     username: card.cardUsername, 
     number: card.cardNumber,
     hideNumber: false,
+    style: {
+      cardColor: {
+        left: card.style.cardColor.left,
+        right: card.style.cardColor.right,
+      }
+    }
   }
 }
 
@@ -26,12 +38,5 @@ export const hideNumber = (card: Card) => {
   return {
     type: 'HIDENUM_CARD',
     card: card
-  }
-}
-
-export const currActiveCard = (card: any) => {
-  return {
-    type: 'ACTIVE_CARD',
-    card: card,
   }
 }

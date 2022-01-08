@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions, KeyboardAvoidingView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
 
-import { TextInputMask } from 'react-native-masked-text';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -14,46 +13,82 @@ import Card from '../components/Card';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { ModalAlerts } from '../components/ModalAlerts';
-import { useAppContext } from '../context/Context';
 import { InputText } from '../components/InputText';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
+const INITIAL_CARD_STATE = {
+  cardName: '',
+  username: '',
+  number: '',
+  style: {
+    cardColor: {
+      left: '',
+      right: ''
+    }
+  },
+}
+
+type ColorOptionProps = {
+  left: string,
+  right: string,
+}
 
 const CreateCardPage: React.FC = () => {
   const navigation = useNavigation();
-  
   const dispatch = useDispatch();
 
-  const { 
-    newCardName, newCardNumber, newCardUsername, 
-    setCardName, setCardNumber, setCardUsername } = useAppContext();
+  const [card, setCard] = useState(INITIAL_CARD_STATE)
+  const [cardColorsOptions, setCardColorsOptions] = useState<any>([])
 
+  const [loadingColors, setLoadingColors] = useState(false)
   const [canShowModal, setCanShowModal] = useState(false);
-
 
   function submitCardCreate() {
     dispatch(createCard({
-      cardName: newCardName, 
-      cardUsername: newCardUsername, 
-      cardNumber: newCardNumber,
+      cardName: card.cardName, 
+      cardUsername: card.username, 
+      cardNumber: card.number,
       hideCardNumber: false,
+      style: {
+        cardColor: {
+          left: card.style.cardColor.left,
+          right: card.style.cardColor.right
+        }
+      }
     }));
 
     setCanShowModal(true);
     
     setTimeout(() => {
-      setCardName('') 
-      setCardNumber('')
-      setCardUsername('')
+      setCard(INITIAL_CARD_STATE)
       navigation.navigate('CardsPage')
       setCanShowModal(false) 
     }, 3000);
 
   }
 
+  const generateCardColors = () => {
+    setLoadingColors(true)
+    const getColor = () => {
+      const hex = (Math.random()*0xFFFFFF<<0).toString(16);
+      return `#${hex}`
+    }
+
+    const colors = new Array(20).fill({left: null, right: null})
+
+    setCardColorsOptions(colors.map(() => ({left: getColor(), right: getColor()})))
+    setLoadingColors(false)
+  }
+
+  useEffect(() => {
+    generateCardColors()
+  }, [])
+
   return (
     <SafeAreaView>
-    <ScrollView showsVerticalScrollIndicator={false}>
-         <View style={styles.pageContainer}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+         <KeyboardAvoidingView style={styles.pageContainer}>
           <View style={styles.headerContainer}>
               <RectButton onPress={() => navigation.navigate('CardsPage')} style={{ marginRight: 5 }}>
                 <MaterialIcons 
@@ -68,32 +103,62 @@ const CreateCardPage: React.FC = () => {
             <View style={styles.cardContainer}>
               <Card
                 id={0}
-                name={newCardName === '' ? 'Nome do Cartão' : newCardName}
-                username={newCardUsername === '' ? 'Nome Completo' : newCardUsername}
-                number={newCardNumber === '' ? '1234 1234 1234 1234' : newCardNumber}
+                name={card.cardName || 'Nome do Cartão'}
+                username={card.username || 'Nome Completo'}
+                number={card.number || '1234 1234 1234 1234'}
                 hideNumber={false}
+                color={card.style.cardColor}
               />
             </View>
 
             <View style={styles.formContainer}>
+              <Text style={styles.formInputLabel}>Cor do cartão</Text>
+              {
+                loadingColors ? 
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                  <ActivityIndicator color={'#000'} />
+                  <Text style={{marginLeft: 8}}>Gerando cores...</Text>
+                </View>
+                : (
+                  <>
+                    <View style={styles.cardColorContainer}>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {cardColorsOptions.map((color: ColorOptionProps) => (
+                          <TouchableOpacity onPress={() => setCard({...card, style: { cardColor: color}})}>
+                            <LinearGradient style={styles.cardColorOption} colors={[color.left, color.right]} />
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                      <TouchableOpacity onPress={generateCardColors} style={{marginLeft: 10}}>
+                        <Ionicons name='reload' size={16} />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )
+              }
               <View style={styles.formInput}>
-                <InputText />
+                <InputText 
+                  cardName={card.cardName} 
+                  username={card.username} 
+                  number={card.number} 
+                  setCard={setCard} 
+                />
               </View>
 
               <View style={styles.createCardContainer}>
                 <RectButton 
                   enabled={
-                    newCardName.length >= 3 &&
-                    newCardUsername.length >= 3 &&
-                    newCardNumber.length === 19 && true
+                    card.cardName.length >= 3 &&
+                    card.username.length >= 3 &&
+                    card.number.length === 19 && true
                   }
                   onPress={submitCardCreate} 
                   style={[
                     styles.createCardButton,
                     
-                    newCardName.length < 3 ||
-                    newCardUsername.length < 3 ||
-                    newCardNumber.length < 19
+                    card.cardName.length < 3 ||
+                    card.username.length < 3 ||
+                    card.number.length < 19
                     ? styles.disabled : styles.enable
                   ]}
                 >
@@ -102,12 +167,10 @@ const CreateCardPage: React.FC = () => {
               </View>
             </View>
 
-          {
-            canShowModal && <ModalAlerts emoji={'🤑'} message={`Seu cartão ${newCardName}, foi criado!`} />
-          }
-         </View>
-    </ScrollView>
-  </SafeAreaView>  
+          {canShowModal && <ModalAlerts emoji={'🤑'} message={`Seu cartão ${card.cardName}, foi criado!`} />}
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>  
   );
 }
 
@@ -115,6 +178,7 @@ export { CreateCardPage };
 
 const styles = StyleSheet.create({
   pageContainer: {
+    flex: 1,
     paddingVertical: 30,
   },
 
@@ -133,11 +197,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
 
+  cardColorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  cardColorOption: {
+    width: 25,
+    height: 25,
+    borderRadius: 300,
+    margin: 9,
+  },
   formContainer: {
     paddingHorizontal: 30,
   },
   formInput: {
     marginBottom: 50,
+  },
+  formInputLabel: {
+    fontFamily: fonts.heading,
+    fontSize: 9,
+    textTransform: 'uppercase'
   },
 
   createCardContainer: {

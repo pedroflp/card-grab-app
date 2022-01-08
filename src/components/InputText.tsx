@@ -5,9 +5,14 @@ import { useAppContext } from '../context/Context';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
+type Props = {
+  cardName: string,
+  username: string,
+  number: string,
+  setCard: Function,
+}
 
-const InputText: React.FC = () => {
-  const { newCardName, newCardUsername, newCardNumber, setCardName, setCardUsername, setCardNumber } = useAppContext();
+const InputText: React.FC<Props> = ({cardName, username, number, setCard}: any) => {
 
   return (
   <>
@@ -17,8 +22,8 @@ const InputText: React.FC = () => {
     <TextInput
       style={styles.formTextInput} 
       placeholder='Nome do Cartão' 
-      onChangeText={setCardName}
-      value={newCardName}
+      value={cardName}
+      onChangeText={(text) => setCard((state: any) => ({ ...state, cardName: text }))}
       maxLength={32}
     />
   </View>
@@ -28,8 +33,8 @@ const InputText: React.FC = () => {
     <TextInput
       style={styles.formTextInput} 
       placeholder='Nome Completo' 
-      onChangeText={setCardUsername}
-      value={newCardUsername}
+      value={username}
+      onChangeText={(text) => setCard((state: any) => ({ ...state, username: text }))}
       maxLength={30}
     />
   </View>
@@ -43,9 +48,9 @@ const InputText: React.FC = () => {
       options={{
         obfuscated: false,
       }}
-      value={newCardNumber}
+      value={number}
       onChangeText={(text) => {
-        setCardNumber(text.toString())}
+        setCard((state: any) => ({ ...state, number: text.toString() }))}
       } 
     />
   </View>

@@ -6,15 +6,12 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 
-import { currActiveCard } from '../store/cards/actions/card';
-
 import { ActionButtons } from '../components/ActionButtons';
 import NoCard from '../components/NoCard';
 import Card from '../components/Card';
 
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { useAppContext } from '../context/Context';
 
 type CardProps = {
   id: number,
@@ -22,6 +19,12 @@ type CardProps = {
   username: string,
   number: string,
   hideNumber: boolean,
+  style: {
+    cardColor: {
+      left: string,
+      right: string
+    }
+  }
 }
 
 type SliderCard = {
@@ -33,17 +36,9 @@ const CardsPage: React.FC = () => {
   const navigation = useNavigation()
 
   const dispatch = useDispatch()
-  const cards = useSelector((state: RootStateOrAny) => state.cards)
+  const cards = useSelector((state: RootStateOrAny) => state.cards.cards)
 
-  const { needUpdate, updateCards } = useAppContext()
-
-  useEffect(() => {  
-   console.log(cards.activeCard) 
-  },[cards])
-  
-  const [myCards, setMyCards] = useState([])
-  
-  const [index, setIndex] = useState(0);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   const SliderCardItem = ({ item, index }: SliderCard) => (
     <Card
@@ -53,27 +48,9 @@ const CardsPage: React.FC = () => {
       number={item.number} 
       hideNumber={item.hideNumber}
       key={index}
+      color={item.style.cardColor}
     />
   )
-  useEffect(() => {
-    if (cards.cards) {
-      setMyCards(cards.cards)
-      myCards.filter((card, i) => {    
-        if (index === i) dispatch(currActiveCard(card))
-        else {
-          dispatch(currActiveCard(myCards[0]))
-        }
-      })
-    }
-  }, [cards.cards, myCards, index])
-
-  useEffect(() => {
-    updateCards(true)
-    setIndex(0)
-    setTimeout(() => {
-      updateCards(false)
-    }, 500);
-  }, [cards.cards.length])
 
   return (
     <SafeAreaView>
@@ -86,27 +63,22 @@ const CardsPage: React.FC = () => {
             </RectButton>
           </View>
 
-        { myCards.length > 0
+        { cards.length > 0
           ?
           <>
-
-          <View style={styles.cardContainer}>
-            { !needUpdate ? 
-              <>
-                <Carousel
+            <View style={styles.cardContainer}>
+              <Carousel
                 layout="stack"
-                data={myCards}
+                data={cards}
                 renderItem={SliderCardItem}
                 sliderWidth={Dimensions.get('window').width}
                 itemWidth={Dimensions.get('window').width*0.85}
-                onSnapToItem={(index) => {
-                  setIndex(index);
-                }}
+                onSnapToItem={(index) => setCurrentCardIndex(index)}
                 useScrollView={false}
               />
               <Pagination
-                dotsLength={myCards.length}
-                activeDotIndex={index}
+                dotsLength={cards.length}
+                activeDotIndex={currentCardIndex}
                 dotStyle={{
                   width: 15,
                   height: 5,
@@ -117,28 +89,20 @@ const CardsPage: React.FC = () => {
                 inactiveDotOpacity={0.4}
                 inactiveDotScale={0.85}
               />
-            </>
-              : 
-              <NoCard 
-                topChildren={<ActivityIndicator size="large" color="#cccccc" />}
-                centerChildren={<Text>Carregando seus cartões...</Text>}
-              />
-            }
-          </View>
-
-          <View style={styles.actionContainer}>
-            <Text style={styles.actionTitle}>Ações</Text>
-            <View style={styles.actionButtonList}>
-              <ActionButtons />
             </View>
-          </View>
 
+            <View style={styles.actionContainer}>
+              <Text style={styles.actionTitle}>Ações</Text>
+              <View style={styles.actionButtonList}>
+                <ActionButtons cards={cards} activeCardIndex={currentCardIndex} />
+              </View>
+            </View>
           </>
           : 
-          <NoCard 
-            topChildren={<Text>💳</Text>} 
-            centerChildren={<Text>Você ainda não criou nenhum cartão!</Text>} 
-          />
+            <NoCard 
+              topChildren={<Text>💳</Text>} 
+              centerChildren={<Text>Você ainda não criou nenhum cartão!</Text>} 
+            />
         }
 
         </View>

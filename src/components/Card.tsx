@@ -12,30 +12,17 @@ type CardProps = {
   username: string,
   number: string,
   hideNumber: boolean,
+  color: {
+    left: string,
+    right: string
+  }
 }
 
 
 const Card: React.FC<CardProps> = (props) => {
-  const [cardColors, setCardColors] = useState({
-    left: '',
-    right: '',
-  })
-
-  const randomColor = () => {
-    const hex = (Math.random()*0xFFFFFF<<0).toString(16);
-    return `#${hex}`
-  }
-
-  useEffect(() => {
-    setCardColors({
-      left: randomColor(),
-      right: randomColor()
-    })
-  }, [])
-
   return (
       <LinearGradient 
-        colors={[ cardColors.left, cardColors.right ]} 
+        colors={[props.color.left, props.color.right]} 
         start={[ 0,1 ]}
         end={[ 1,0 ]}
         style={styles.card}
