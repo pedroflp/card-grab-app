@@ -13,13 +13,12 @@ Initially as a **development test for [Proft](https://proft.sale)** and extended
 ![Styled](https://img.shields.io/static/v1?label=APP&message=styled-components&color=ea76c4&style=for-the-badge&logo=styled-components)
 
 
-
-  
 ## Features
 
 - Create unlimited cards
 - Hide/Show number of specific card
 - Delete cards
+- Style your card by your own
 - Storage information in your app cache
 
   
@@ -30,13 +29,7 @@ Initially as a **development test for [Proft](https://proft.sale)** and extended
 
   
 ## Installation 
-
-- Install APK build app by clicking this link
-
-    [Install CardGrab](https://abre.ai/cardgrab)
-
-- Allow in your Android device to install unknown sources
-![App Screenshot](https://img.gadgethacks.com/img/78/22/63567132561665/0/android-101-sideload-apps-by-enabling-unknown-sources-install-unknown-apps.w1456.jpg)
+[Baixar na play store](https://play.google.com/store/apps/details?id=com.pedroflp.cardgrabapp)
     
 ## Author
 
